@@ -1,0 +1,159 @@
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background: linear-gradient(135deg, #020617, #0f172a);
+  color: white;
+}
+
+/* ===== NAVBAR SPACING FIX ===== */
+.page-wrapper {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-top: 64px;   /* navbar height */
+  width: 100%;
+}
+
+/* ===== AUTH BOX ===== */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 🔥 THIS FIXES THE PROBLEM */
+  padding-top: 64px;   /* same as navbar height */
+  width: 100%;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 35px;   /* 🔥 YOU LOST THIS */
+  margin: auto;
+
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* ===== TEXT ===== */
+.title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.subtitle {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tabs button:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.tabs .active {
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+  background: rgba(56,189,248,0.1);
+}
+
+/* ===== FORM ===== */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form label {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.form input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: white;
+  margin-top: 6px;
+  transition: 0.3s;
+}
+
+.form input:focus {
+  border-color: #38bdf8;
+  outline: none;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+  margin-top: 20px;
+  padding: 12px;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(14,165,233,0.4);
+}
+
+/* ===== ROLE SELECTOR ===== */
+.role-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.role {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  text-align: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.role:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.role.active {
+  border-color: #0ea5e9;
+  color: #0ea5e9;
+  background: rgba(14,165,233,0.1);
+}
