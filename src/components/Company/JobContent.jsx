@@ -1,46 +1,147 @@
 import React, { useEffect, useState } from "react";
-import {
-  IconPlus,
-  IconBuilding,
-  Badge,
-} from "./CompanyShared";
+import { IconPlus } from "./CompanyShared";
 
 export default function JobContent({ setShowPostModal }) {
-
   const [jobs, setJobs] = useState([]);
+  console.log("JobContent component rendered");
 
-  // 🔥 FETCH COMPANY JOBS
+  // 🔥 EDIT STATE
+  const [editJob, setEditJob] = useState(null);
+  const [form, setForm] = useState({});
+
+  const [loading, setLoading] = useState(false);
+
   const fetchCompanyJobs = async () => {
     try {
       const token = localStorage.getItem("token");
+      const role = localStorage.getItem("role");
+      console.log("Fetching jobs with token:", token ? "present" : "missing");
+      console.log("User role:", role);
+
+      if (!token) {
+        console.error("No authentication token found");
+        return;
+      }
 
       const response = await fetch(
         "http://localhost:8000/api/company/job_list/",
         {
-          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
+      console.log("API response status:", response.status);
+
+      if (!response.ok) {
+        console.error("API request failed:", response.status, response.statusText);
+        return;
+      }
+
       const data = await response.json();
+      console.log("API response data:", data);
+      console.log("Setting jobs state with", data.length, "jobs");
       setJobs(data);
-    //   console.log(data,"jello");
-      
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
   };
 
-  // 🔥 LOAD DATA
   useEffect(() => {
+    console.log("JobContent mounted: fetching jobs");
     fetchCompanyJobs();
   }, []);
 
+  const handleDelete = async (jobId) => {
+    if (!window.confirm("Are you sure you want to delete this job?")) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await fetch("http://localhost:8000/api/company/job_list/", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ job_id: jobId }),
+      });
+
+      fetchCompanyJobs(); // 🔥 refresh
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Jobs state changed:", jobs.length, "jobs");
+  }, [jobs]);
+
+  // Initialize form when editJob changes
+  useEffect(() => {
+    if (editJob) {
+      console.log("Initializing form for job:", editJob);
+
+      // Format deadline for date input (YYYY-MM-DD)
+      const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+      };
+
+      const formData = {
+        title: editJob.title || "",
+        description: editJob.description || "",
+        location: editJob.location || "",
+        job_type: editJob.job_type || "",
+        work_mode: editJob.work_mode || "",
+        qualification: editJob.qualification || "",
+        skills: editJob.skills || "",
+        experience: editJob.experience || "",
+        salary: editJob.salary || "",
+        deadline: formatDate(editJob.deadline) || "",
+      };
+
+      console.log("Setting form data:", formData);
+      setForm(formData);
+    }
+  }, [editJob]);
+
+  const openEdit = (job) => {
+    console.log("Opening edit for job:", job);
+    setEditJob(job);
+  };
+
+  const handleUpdate = async () => {
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await fetch("http://localhost:8000/api/company/job_list/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          job_id: editJob.id,
+          ...form,
+        }),
+      });
+
+      setEditJob(null);
+      fetchCompanyJobs();
+    } catch (error) {
+      console.error("Update error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
-
       {/* HEADER */}
       <div className="section-header">
         <div>
@@ -48,91 +149,224 @@ export default function JobContent({ setShowPostModal }) {
           <p>Post, edit, or pause job listings</p>
         </div>
 
-        <button
-          className="primary-btn"
-          onClick={() => setShowPostModal(true)}
-        >
+        <button className="primary-btn" onClick={() => setShowPostModal(true)}>
           <IconPlus width={18} height={18} /> Create Job
         </button>
       </div>
 
       {/* TABLE */}
       <div className="table-container">
-        <div style={{ overflowX: "auto" }}>
-          <table className="data-table">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Job Title</th>
+              <th>Location</th>
+              <th>Type</th>
+              <th>Salary</th>
+              <th>Deadline</th>
+              <th></th>
+            </tr>
+          </thead>
 
-            <thead>
+          <tbody>
+            {jobs.length === 0 ? (
               <tr>
-                <th>Job Title</th>
-                <th>Location</th>
-                <th>Type</th>
-                <th>Salary</th>
-                <th>Deadline</th>
-                <th></th>
+                <td colSpan="6" style={{ textAlign: "center" }}>
+                  No jobs posted yet
+                </td>
               </tr>
-            </thead>
+            ) : (
+              jobs.map((job) => (
+                <tr key={job.id}>
+                  <td>{job.title}</td>
+                  <td>{job.location}</td>
+                  <td>{job.job_type}</td>
+                  <td>{job.salary}</td>
+                  <td>{job.deadline}</td>
 
-            <tbody>
+                  <td>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button
+                        className="action-btn"
+                        onClick={() => openEdit(job)}
+                      >
+                        Edit
+                      </button>
 
-              {jobs.length === 0 ? (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                    No jobs posted yet
+                      <button
+                        className="action-btn"
+                        style={{ color: "red" }}
+                        onClick={() => handleDelete(job.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              ) : (
-                jobs.map((job) => (
-                  <tr key={job.id}>
-                    <td>
-                      <div>
-                        <p style={{ fontWeight: 500 }}>{job.title}</p>
-                        <p style={{ fontSize: "0.7rem", color: "#94a3b8" }}>
-                          {job.skills}
-                        </p>
-                      </div>
-                    </td>
-
-                    <td>{job.location}</td>
-
-                    <td>{job.job_type}</td>
-
-                    <td>{job.salary}</td>
-
-                    <td style={{ color: "#94a3b8" }}>
-                      {job.deadline}
-                    </td>
-
-                    <td>
-                      <div className="flex gap-2">
-                        <button className="action-btn">Edit</button>
-                        <button
-                          className="action-btn"
-                          style={{ color: "#64748b" }}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-
-            </tbody>
-
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {/* PROMO */}
-      {/* <div className="promo-banner">
-        <IconBuilding
-          width={32}
-          height={32}
-          style={{ margin: "0 auto", color: "#4f46e5" }}
-        />
-        <h3>Reach top talent with sponsored jobs</h3>
-        <button className="promo-btn">Boost visibility</button>
-      </div> */}
+      {editJob && (
+        <div className="modal-overlay">
+          <div className="modal" key={editJob.id}>
+            <div className="modal-header">
+              <h3>Edit Job</h3>
+              <button
+                className="modal-close"
+                onClick={() => setEditJob(null)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Job Title</label>
+                <input
+                  type="text"
+                  className="modal-input"
+                  placeholder="Job Title"
+                  value={form.title || ""}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Job Description</label>
+                <textarea
+                  className="modal-textarea"
+                  placeholder="Job Description"
+                  rows="3"
+                  value={form.description || ""}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="Location"
+                    value={form.location || ""}
+                    onChange={(e) => setForm({ ...form, location: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Job Type</label>
+                  <select
+                    className="modal-input"
+                    value={form.job_type || ""}
+                    onChange={(e) => setForm({ ...form, job_type: e.target.value })}
+                  >
+                    <option value="">Select Job Type</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="internship">Internship</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Work Mode</label>
+                  <select
+                    className="modal-input"
+                    value={form.work_mode || ""}
+                    onChange={(e) => setForm({ ...form, work_mode: e.target.value })}
+                  >
+                    <option value="">Select Work Mode</option>
+                    <option value="onsite">Onsite</option>
+                    <option value="remote">Remote</option>
+                    <option value="hybrid">Hybrid</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Qualification</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="Qualification"
+                    value={form.qualification || ""}
+                    onChange={(e) =>
+                      setForm({ ...form, qualification: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Skills (comma separated)</label>
+                <input
+                  type="text"
+                  className="modal-input"
+                  placeholder="Skills (comma separated)"
+                  value={form.skills || ""}
+                  onChange={(e) => setForm({ ...form, skills: e.target.value })}
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Experience</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="Experience (e.g. 2 years)"
+                    value={form.experience || ""}
+                    onChange={(e) => setForm({ ...form, experience: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Salary</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="Salary"
+                    value={form.salary || ""}
+                    onChange={(e) => setForm({ ...form, salary: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Application Deadline</label>
+                <input
+                  type="date"
+                  className="modal-input"
+                  value={form.deadline || ""}
+                  onChange={(e) => setForm({ ...form, deadline: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="modal-cancel"
+                onClick={() => setEditJob(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="modal-submit"
+                onClick={handleUpdate}
+                disabled={loading}
+              >
+                {loading ? "Updating..." : "Update Job"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -15,6 +15,8 @@ export default function StudentDashboard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [savedJobs, setSavedJobs] = useState(new Set());
+  const [savedJobsList, setSavedJobsList] = useState([]);
 
   // State for user data
   const [user, setUser] = useState({
@@ -38,39 +40,89 @@ export default function StudentDashboard() {
   // Mock applied jobs (replace with API call)
   const [appliedJobs, setAppliedJobs] = useState([]);
 
-useEffect(() => {
-  fetchAppliedJobs();
-}, []);
+  useEffect(() => {
+    fetchAppliedJobs();
+  }, []);
 
-const fetchAppliedJobs = async () => {
-  try {
+  const fetchAppliedJobs = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "http://localhost:8000/api/student/apply-job/",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      console.log("API DATA:", data); // 🔍 debug
+      setAppliedJobs(data);
+    } catch (error) {
+      console.error("Error fetching applied jobs:", error);
+    }
+  };
+
+  const fetchSavedJobs = async () => {
     const token = localStorage.getItem("token");
 
-    const response = await fetch(
-      "http://localhost:8000/api/student/apply-job/",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await fetch("http://localhost:8000/api/student/saved-jobs/", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    setSavedJobsList(data);
+
+    // 🔥 store only IDs for icon state
+    setSavedJobs(new Set(data.map((item) => item.job.id)));
+  };
+
+  useEffect(() => {
+    fetchSavedJobs();
+  }, []);
+
+  const handleSaveJob = async (jobId) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:8000/api/student/save-job/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ job_id: jobId }),
+    });
+
+    const data = await res.json();
 
     
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    setSavedJobs((prev) => {
+      const newSet = new Set(prev);
 
-    const data = await response.json();
+      if (data.saved) {
+        newSet.add(jobId);
+      } else {
+        newSet.delete(jobId);
+      }
 
-    console.log("API DATA:", data); // 🔍 debug
-    setAppliedJobs(data);
+      return newSet;
+    });
 
-  } catch (error) {
-    console.error("Error fetching applied jobs:", error);
-  }
-};
+    
+    fetchSavedJobs();
+  };
 
   // Mock notifications (replace with API call)
   const [notifications, setNotifications] = useState([
@@ -161,8 +213,7 @@ const fetchAppliedJobs = async () => {
     }
   };
 
-
-   const fetchRecommendedJobs = async () => {
+  const fetchRecommendedJobs = async () => {
     try {
       const token = localStorage.getItem("token");
 
@@ -172,14 +223,11 @@ const fetchAppliedJobs = async () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
       setRecommendedJobs(data);
-     
-      
-
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
@@ -188,7 +236,6 @@ const fetchAppliedJobs = async () => {
   useEffect(() => {
     fetchRecommendedJobs();
   }, []);
-  
 
   // Route protection and data fetching
   useEffect(() => {
@@ -280,7 +327,7 @@ const fetchAppliedJobs = async () => {
         user={user}
         notifications={notifications}
         showNotifications={showNotifications}
-        setNotifications={setNotifications} 
+        setNotifications={setNotifications}
         setShowNotifications={setShowNotifications}
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
@@ -295,10 +342,15 @@ const fetchAppliedJobs = async () => {
             setSearchQuery={setSearchQuery}
             locationFilter={locationFilter}
             setLocationFilter={setLocationFilter}
+            savedJobs={savedJobs}
+            handleSaveJob={handleSaveJob}
           />
         )}
         {activeTab === "applied" && (
-          <AppliedJobsContent appliedJobs={appliedJobs} />
+          <AppliedJobsContent
+            appliedJobs={appliedJobs}
+            savedJobs={savedJobsList}
+          />
         )}
         {activeTab === "profile" && (
           <ProfileContent

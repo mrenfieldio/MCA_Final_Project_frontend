@@ -144,19 +144,18 @@ export const applicantsRecent = [
 
 export const StatCard = ({ icon: Icon, title, value, trend, colorClass }) => (
   <div className="stat-card">
-    <div className="stat-card-header">
-      <div>
-        <p className="stat-title">{title}</p>
-        <p className="stat-value">{value}</p>
-        {trend && (
-          <p className="stat-trend">
-            <IconTrendingUp width={12} height={12} /> {trend}
-          </p>
-        )}
-      </div>
-      <div className={`stat-icon ${colorClass}`}>
-        <Icon />
-      </div>
+    {/* Removed stat-card-header wrapper completely */}
+    <div>
+      <p className="stat-title">{title}</p>
+      <p className="stat-value">{value}</p>
+      {trend && (
+        <p className="stat-trend">
+          <IconTrendingUp width={12} height={12} /> {trend}
+        </p>
+      )}
+    </div>
+    <div className={`stat-icon ${colorClass}`}>
+      <Icon />
     </div>
   </div>
 );

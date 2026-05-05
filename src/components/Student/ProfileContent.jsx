@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { User, BookOpen, Code, Save, X, Edit2, Camera } from "lucide-react";
+import { showError, showSuccess } from "../../utils/toast";
 
 export default function ProfileContent({ user, token, refreshProfile }) {
   const [editMode, setEditMode] = useState(false);
@@ -104,10 +105,10 @@ export default function ProfileContent({ user, token, refreshProfile }) {
       setProfilePictureFile(null);
       setResumeFile(null);
       await refreshProfile();
-      alert("Profile updated successfully!");
+      showSuccess("Profile updated successfully!");
     } catch (err) {
       console.error(err);
-      alert(err.message || "Failed to update profile");
+      showError(err.message || "Failed to update profile");
     } finally {
       setLoading(false);
     }

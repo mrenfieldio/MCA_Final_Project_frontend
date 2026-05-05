@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import {
   IconClock,
   IconBriefcase,
@@ -22,6 +23,36 @@ export default function DashboardContent({
   setActiveTab,
   company,
 }) {
+  const [stats, setStats] = useState({});
+  const [jobs, setJobs] = useState([]);
+  const [recentCandidates, setRecentCandidates] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  const fetchDashboard = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("http://localhost:8000/api/company/dashboard/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      setStats(data.stats);
+      setJobs(data.jobs);
+      setRecentCandidates(data.recent_candidates);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="welcome-header">
@@ -59,29 +90,28 @@ export default function DashboardContent({
         <StatCard
           icon={IconBriefcase}
           title="Active Jobs"
-          value={statsData.activeJobs}
-          trend="+2 vs last month"
+          value={stats.active_jobs || 0}
           colorClass="blue"
         />
+
         <StatCard
           icon={IconUsers}
           title="Total Applicants"
-          value={statsData.totalApplicants.toLocaleString()}
-          trend="+12% increase"
+          value={stats.total_applicants || 0}
           colorClass="emerald"
         />
+
         <StatCard
           icon={IconCalendar}
           title="Interviews"
-          value={statsData.interviewsScheduled}
-          trend="scheduled this week"
+          value={stats.interviews || 0}
           colorClass="amber"
         />
+
         <StatCard
           icon={IconStar}
           title="Shortlisted"
-          value={statsData.shortlisted}
-          trend="awaiting feedback"
+          value={stats.shortlisted || 0}
           colorClass="purple"
         />
       </div>
@@ -101,7 +131,7 @@ export default function DashboardContent({
             <thead>
               <tr>
                 <th>Job Title</th>
-                <th>Department</th>
+                {/* <th>Department</th> */}
                 <th>Location</th>
                 <th>Applicants</th>
                 <th>Status</th>
@@ -110,14 +140,12 @@ export default function DashboardContent({
               </tr>
             </thead>
             <tbody>
-              {jobsList
-                .filter((job) => job.status === "active")
-                .map((job) => (
-                  <tr key={job.id}>
-                    <td style={{ fontWeight: 500 }}>{job.title}</td>
-                    <td>{job.dept}</td>
+              {jobs.map((job) => (
+                <tr key={job.id}>
+                  <td style={{ fontWeight: 500 }}>{job.title}</td>
+                  {/* <td>{job.dept}</td> */}
                     <td>
-                      <IconMapPin width={12} height={12} /> {job.location}
+                      {job.location}
                     </td>
                     <td>{job.applicants}</td>
                     <td>
@@ -125,9 +153,9 @@ export default function DashboardContent({
                     </td>
                     <td style={{ color: "#94a3b8" }}>{job.posted}</td>
                     <td>
-                      <button className="action-btn">
+                      {/* <button className="action-btn">
                         <IconEye width={14} height={14} /> View
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}
@@ -141,7 +169,7 @@ export default function DashboardContent({
           Recent Top Candidates
         </h3>
         <div className="candidates-grid">
-          {applicantsRecent.map((app, idx) => (
+          {recentCandidates.map((app, idx) => (
             <div key={idx} className="candidate-card">
               <div className="candidate-avatar">{app.avatar}</div>
               <div className="candidate-info">

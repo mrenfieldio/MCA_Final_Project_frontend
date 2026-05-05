@@ -86,7 +86,7 @@ export default function Navbar({
               className={`nav-link ${activeTab === "applied" ? "active" : ""}`}
               onClick={() => setActiveTab("applied")}
             >
-              Applied Jobs
+              My Jobs
             </button>
           </li>
         </ul>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import JobCard from "./JobCard";
 import {
   Award,
   Briefcase,
@@ -11,7 +12,7 @@ import {
   Clock,
   Bookmark,
 } from "lucide-react";
-import JobDetailsModal from "./JobModal"; // Make sure the import path is correct
+import JobDetailsModal from "./JobModal";
 
 export default function DashboardContent({
   user,
@@ -20,23 +21,63 @@ export default function DashboardContent({
   setSearchQuery,
   locationFilter,
   setLocationFilter,
+  savedJobs = new Set(),
+  handleSaveJob = () => {},
 }) {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [savedJobs, setSavedJobs] = useState(new Set());
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleJobClick = (job) => {
     setSelectedJob(job);
     setIsModalOpen(true);
   };
 
+  const fetchJobs = async () => {
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const query = new URLSearchParams({
+        search: searchQuery || "",
+        location: locationFilter || "",
+      });
+
+      const res = await fetch(
+        `http://localhost:8000/api/student/job-search/?${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+      // console.log("API DATA oooooooooooo:", data);
+      setJobs(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   const delay = setTimeout(fetchJobs, 500);
+  //   return () => clearTimeout(delay);
+  // }, [searchQuery, locationFilter]);
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
   const handleApply = async (job, applicationData) => {
     try {
-      // Here you would typically send this data to your backend
       console.log("Application submitted:", { job, applicationData });
-      
-      
-      
+
       alert(`Application submitted for ${job.title}!`);
     } catch (error) {
       console.error("Error submitting application:", error);
@@ -44,25 +85,12 @@ export default function DashboardContent({
     }
   };
 
-  const handleSaveJob = (jobId, e) => {
-    e.stopPropagation();
-    setSavedJobs((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(jobId)) {
-        newSet.delete(jobId);
-      } else {
-        newSet.add(jobId);
-      }
-      return newSet;
-    });
-  };
-
   return (
     <div className="dashboard-content">
       {/* HERO */}
       <div className="hero-section">
         <div>
-          <h1>Welcome back, {user?.name?.split(" ")[0] || "User"}! 👋</h1>
+          <h1>Hai, {user?.name?.split(" ")[0] || "User"}</h1>
           <p>Your next career opportunity is just around the corner</p>
         </div>
 
@@ -147,94 +175,76 @@ export default function DashboardContent({
           />
         </div>
 
-        <button className="search-btn">Find Jobs</button>
+        <button
+          className="search-btn"
+          onClick={() => {
+            setIsSearching(true);
+            fetchJobs();
+          }}
+        >
+          {loading ? "Searching..." : "Find Jobs"}
+        </button>
       </div>
 
       {/* JOBS */}
       <div className="jobs-section">
+        {/* 🔥 DYNAMIC HEADER */}
         <div className="section-header">
-          <h2>Recommended for You</h2>
-          <button className="view-all">View all →</button>
+          <h2>{isSearching ? "Search Results" : "Recommended for You"}</h2>
+
+          {isSearching && (
+            <button
+              className="view-all"
+              onClick={() => {
+                setIsSearching(false);
+                setSearchQuery("");
+                setLocationFilter("");
+              }}
+            >
+              Clear →
+            </button>
+          )}
         </div>
 
         <div className="jobs-grid">
-          {recommendedJobs.length === 0 ? (
+          {loading ? (
+            <p style={{ textAlign: "center", width: "100%" }}>
+              Loading jobs...
+            </p>
+          ) : isSearching ? (
+            jobs.length === 0 ? (
+              <p style={{ textAlign: "center", width: "100%" }}>
+                No jobs found
+              </p>
+            ) : (
+              jobs.map((job) => (
+                <JobCard
+                  key={job.id}
+                  job={job}
+                  handleJobClick={handleJobClick}
+                  handleSaveJob={handleSaveJob}
+                  savedJobs={savedJobs}
+                />
+              ))
+            )
+          ) : recommendedJobs.length === 0 ? (
             <p style={{ textAlign: "center", width: "100%" }}>
               No recommended jobs found
             </p>
           ) : (
             recommendedJobs.map((job) => (
-              <div
+              <JobCard
                 key={job.id}
-                className="job-card"
-                onClick={() => handleJobClick(job)}
-                style={{ cursor: "pointer" }}
-              >
-                {/* HEADER */}
-                <div className="job-card-header">
-                  <div className="company-logo">
-                    {job.company?.charAt(0) || "C"}
-                  </div>
-
-                  <button
-                    className="save-btn"
-                    onClick={(e) => handleSaveJob(job.id, e)}
-                  >
-                    <Bookmark
-                      size={18}
-                      fill={savedJobs.has(job.id) ? "#4F46E5" : "none"}
-                      color={savedJobs.has(job.id) ? "#4F46E5" : "currentColor"}
-                    />
-                  </button>
-                </div>
-
-                {/* TITLE */}
-                <h3 className="job-title">{job.title}</h3>
-                <p className="company-name">{job.company}</p>
-
-                {/* DETAILS */}
-                <div className="job-details">
-                  <span className="job-detail">
-                    <MapPin size={14} />
-                    {job.location}
-                  </span>
-
-                  <span className="job-detail">
-                    <DollarSign size={14} />
-                    {job.salary || "Not Disclosed"}
-                  </span>
-
-                  <span className="job-detail">
-                    <Clock size={14} />
-                    {job.job_type || "N/A"}
-                  </span>
-                </div>
-
-                {/* FOOTER */}
-                <div className="job-footer">
-                  <span className="posted-time">
-                    {job.created_at
-                      ? new Date(job.created_at).toLocaleDateString()
-                      : "Recently"}
-                  </span>
-
-                  <button
-                    className="apply-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleJobClick(job);
-                    }}
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              </div>
+                job={job}
+                handleJobClick={handleJobClick}
+                handleSaveJob={handleSaveJob}
+                savedJobs={savedJobs}
+              />
             ))
           )}
         </div>
       </div>
 
-      {/* Modal */}
       <JobDetailsModal
         job={selectedJob}
         isOpen={isModalOpen}
