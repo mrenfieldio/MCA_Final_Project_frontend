@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import JobCard from "./JobCard";
+import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
+
+import { locations } from "../../data/locations";
 import {
   Award,
   Briefcase,
@@ -29,6 +33,7 @@ export default function DashboardContent({
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [filteredLocations, setFilteredLocations] =useState([]);
 
   const handleJobClick = (job) => {
     setSelectedJob(job);
@@ -73,6 +78,26 @@ export default function DashboardContent({
   useEffect(() => {
     fetchJobs();
   }, []);
+
+  const handleLocationChange = (value) => {
+
+  setLocationFilter(value);
+
+  if (value.trim() === "") {
+
+    setFilteredLocations([]);
+
+    return;
+  }
+
+  const filtered = locations.filter((loc) =>
+    loc.toLowerCase().includes(
+      value.toLowerCase()
+    )
+  );
+
+  setFilteredLocations(filtered);
+};
 
   const handleApply = async (job, applicationData) => {
     try {
@@ -153,8 +178,10 @@ export default function DashboardContent({
 
       {/* SEARCH */}
       <div className="search-section">
+        {/* JOB SEARCH */}
         <div className="search-input-wrapper">
           <Search size={20} className="search-icon" />
+
           <input
             type="text"
             placeholder="Job title, skills, or company"
@@ -164,21 +191,62 @@ export default function DashboardContent({
           />
         </div>
 
-        <div className="search-input-wrapper">
-          <MapPin size={20} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Location"
-            value={locationFilter}
-            onChange={(e) => setLocationFilter(e.target.value)}
-            className="search-input"
-          />
+        {/* LOCATION SEARCH */}
+        <div
+  className="search-input-wrapper"
+  style={{ position: "relative" }}
+>
+
+  <MapPin
+    size={20}
+    className="search-icon"
+  />
+
+  <input
+    type="text"
+    placeholder="Location"
+    value={locationFilter}
+    onChange={(e) =>
+      handleLocationChange(e.target.value)
+    }
+    className="search-input"
+  />
+
+  {/* SUGGESTIONS */}
+  {filteredLocations.length > 0 && (
+
+    <div className="location-suggestions">
+
+      {filteredLocations.map((loc, index) => (
+
+        <div
+          key={index}
+          className="location-item"
+          onClick={() => {
+
+            setLocationFilter(loc);
+
+            setFilteredLocations([]);
+          }}
+        >
+          <MapPin size={14} />
+
+          {loc}
         </div>
 
+      ))}
+
+    </div>
+  )}
+
+</div>
+
+        {/* SEARCH BUTTON */}
         <button
           className="search-btn"
           onClick={() => {
             setIsSearching(true);
+
             fetchJobs();
           }}
         >

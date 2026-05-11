@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "../components/Student/Student_Navbar";
 import DashboardContent from "../components/Student/DashboardContent";
 import AppliedJobsContent from "../components/Student/AppliedJobs";
@@ -8,8 +8,13 @@ import "../styles/student.css";
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState(() => {
+    const tab = searchParams.get('tab');
+    const validTabs = ["dashboard", "applied", "profile"];
+    return validTabs.includes(tab) ? tab : 'dashboard';
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
@@ -17,6 +22,11 @@ export default function StudentDashboard() {
   const [error, setError] = useState(null);
   const [savedJobs, setSavedJobs] = useState(new Set());
   const [savedJobsList, setSavedJobsList] = useState([]);
+
+  const handleSetActiveTab = (newTab) => {
+    setActiveTab(newTab);
+    setSearchParams({ tab: newTab });
+  };
 
   // State for user data
   const [user, setUser] = useState({
@@ -323,7 +333,7 @@ export default function StudentDashboard() {
     <div className="dashboard-container">
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleSetActiveTab}
         user={user}
         notifications={notifications}
         showNotifications={showNotifications}

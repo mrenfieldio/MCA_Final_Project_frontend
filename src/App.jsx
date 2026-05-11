@@ -4,9 +4,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
+import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import ContactForm from "./pages/ContactForm";
 
 function App() {
   return (
@@ -16,12 +18,14 @@ function App() {
       <Routes>
 
          {/* Protected Routes */}
+        <Route path="/admin-dashboard" element={<ProtectedRoute adminOnly={true}> <AdminDashboard /></ProtectedRoute>}/>
         <Route path="/student-dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>}/>
         <Route path="/company-dashboard" element={<ProtectedRoute role="company"><CompanyDashboard /></ProtectedRoute> } />
 
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/contact" element={<ContactForm />} />
 
       </Routes>
     </Router>

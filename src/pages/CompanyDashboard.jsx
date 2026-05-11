@@ -4,7 +4,7 @@ import JobContent from "../components/Company/JobContent";
 import CandidateContent from "../components/Company/Candidate";
 import AnalyticsContent from "../components/Company/Analysis";
 import SettingsContent from "../components/Company/RenderSetting";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/company.css";
 
 import {
@@ -17,7 +17,18 @@ import {
 } from "../components/Company/CompanyShared";
 
 const CompanyDashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => {
+    const page = searchParams.get('page');
+    const validPages = ["dashboard", "jobs", "candidates", "analytics", "settings"];
+    return validPages.includes(page) ? page : 'dashboard';
+  });
+
+  const handleSetActiveTab = (newTab) => {
+    setActiveTab(newTab);
+    setSearchParams({ page: newTab });
+  };
+
   const [showPostModal, setShowPostModal] = useState(false);
   const [company, setCompany] = useState(null);
   const navigate = useNavigate();
@@ -149,7 +160,7 @@ const CompanyDashboard = () => {
                 className={`nav-button ${
                   activeTab === item.id ? "active" : ""
                 }`}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleSetActiveTab(item.id)}
               >
                 <item.icon />
                 <span>{item.label}</span>
@@ -181,7 +192,7 @@ const CompanyDashboard = () => {
         {activeTab === "dashboard" && (
           <DashboardContent
             setShowPostModal={setShowPostModal}
-            setActiveTab={setActiveTab}
+            setActiveTab={handleSetActiveTab}
             company={company}
           />
         )}

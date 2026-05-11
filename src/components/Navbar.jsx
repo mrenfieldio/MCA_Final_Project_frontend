@@ -32,14 +32,14 @@ export default function Navbar() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/jobs">Jobs</Link>
+          <Link to="/auth">Jobs</Link>
         </li>
-        <li>
+        {/* <li>
           <Link to="/freelancers">Freelancers</Link>
         </li>
         <li>
           <Link to="/about">About</Link>
-        </li>
+        </li> */}
         <li>
           <Link to="/contact">Contact</Link>
         </li>

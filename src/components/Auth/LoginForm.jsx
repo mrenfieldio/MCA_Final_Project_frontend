@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../../utils/toast";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginForm() {
   const [form, setForm] = useState({
@@ -8,6 +9,7 @@ export default function LoginForm() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -17,7 +19,7 @@ export default function LoginForm() {
     setLoading(true);
 
     const payload = {
-      username: form.email, 
+      username: form.email,
       password: form.password,
     };
 
@@ -35,9 +37,12 @@ export default function LoginForm() {
       if (res.ok) {
         localStorage.setItem("token", data.access);
         localStorage.setItem("role", data.role);
+        localStorage.setItem("is_admin", data.is_admin);
 
         // 🔁 Redirect
-        if (data.role === "student") {
+        if (data.is_admin) {
+          navigate("/admin-dashboard");
+        } else if (data.role === "student") {
           navigate("/student-dashboard");
         } else {
           navigate("/company-dashboard");
@@ -62,19 +67,27 @@ export default function LoginForm() {
       />
 
       <label>Password</label>
-      <input
-        type="password"
-        placeholder="********"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
 
-      {/* <button type="submit" className="btn">
-        Sign In →
-      </button> */}
-      <button className="btn" disabled={loading}>
-        {loading ? "Logging in..." : "Sign In →"}
-      </button>
-      
+      <div className="password-wrapper">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="********"
+          onChange={(e) =>
+            setForm({
+              ...form,
+              password: e.target.value,
+            })
+          }
+        />
+
+        <button
+          type="button"
+          className="password-toggle"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
+      </div>
     </form>
   );
 }

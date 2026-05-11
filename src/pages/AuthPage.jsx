@@ -13,7 +13,7 @@ export default function AuthPage() {
 
       <div className="page-wrapper">
         <div className="auth-box">
-          <h1 className="title">Welcome back</h1>
+          <h1 className="title">Welcome </h1>
           <p className="subtitle">Sign in to continue to your dashboard</p>
 
           <div className="tabs">

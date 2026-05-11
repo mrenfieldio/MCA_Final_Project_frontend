@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import PaymentButton from "../../components/PaymentButton";
 import {
   IconClock,
   IconBriefcase,
@@ -57,8 +58,8 @@ export default function DashboardContent({
     <>
       <div className="welcome-header">
         <div className="welcome-title">
-          <h1>Welcome back, {company?.company_name || "Loading..."}</h1>
-          <p>
+          <h1>Welcome, {company?.company_name || "Loading..."}</h1>
+          {/* <p>
             <IconClock width={14} height={14} />
             {new Date().toLocaleDateString("en-US", {
               weekday: "long",
@@ -66,7 +67,7 @@ export default function DashboardContent({
               month: "long",
               day: "numeric",
             })}
-          </p>
+          </p> */}
         </div>
         <div className="company-badge">
           <div className="company-avatar">
@@ -119,12 +120,7 @@ export default function DashboardContent({
       <div className="table-container">
         <div className="table-header">
           <h2>Active Openings</h2>
-          <button
-            className="primary-btn"
-            onClick={() => setShowPostModal(true)}
-          >
-            <IconPlus width={16} height={16} /> Post new job
-          </button>
+          <PaymentButton setShowPostModal={setShowPostModal} />
         </div>
         <div style={{ overflowX: "auto" }}>
           <table className="data-table">
@@ -171,7 +167,7 @@ export default function DashboardContent({
         <div className="candidates-grid">
           {recentCandidates.map((app, idx) => (
             <div key={idx} className="candidate-card">
-              <div className="candidate-avatar">{app.avatar}</div>
+              {/* <div className="candidate-avatar">{app.avatar}</div> */}
               <div className="candidate-info">
                 <p className="candidate-name">{app.name}</p>
                 <p className="candidate-role">
