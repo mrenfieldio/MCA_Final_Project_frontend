@@ -1,34 +1,34 @@
 import React from 'react';
 
-export const IconBriefcase = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+export const IconBriefcase = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
   </svg>
 );
-export const IconUsers = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+export const IconUsers = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
     <circle cx="9" cy="7" r="4"></circle>
     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
   </svg>
 );
-export const IconCalendar = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+export const IconCalendar = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
     <line x1="16" y1="2" x2="16" y2="6"></line>
     <line x1="8" y1="2" x2="8" y2="6"></line>
     <line x1="3" y1="10" x2="21" y2="10"></line>
   </svg>
 );
-export const IconStar = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+export const IconStar = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
   </svg>
 );
-export const IconChartLine = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+export const IconChartLine = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M21 12v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3"></path>
     <path d="M3 3v18"></path>
     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -36,62 +36,62 @@ export const IconChartLine = () => (
     <polyline points="3 9 6 12 9 9"></polyline>
   </svg>
 );
-export const IconChartPie = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+export const IconChartPie = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
     <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
   </svg>
 );
-export const IconSettings = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+export const IconSettings = (props) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <circle cx="12" cy="12" r="3"></circle>
     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
   </svg>
 );
 export const IconPlus = (props) => (
-  <svg width={props.width || "16"} height={props.height || "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "16"} height={props.height || "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <line x1="12" y1="5" x2="12" y2="19"></line>
     <line x1="5" y1="12" x2="19" y2="12"></line>
   </svg>
 );
 export const IconTrendingUp = (props) => (
-  <svg width={props.width || "12"} height={props.height || "12"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "12"} height={props.height || "12"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
     <polyline points="17 6 23 6 23 12"></polyline>
   </svg>
 );
 export const IconSearch = (props) => (
-  <svg width={props.width || "18"} height={props.height || "18"} className={props.className || ""} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "18"} height={props.height || "18"} className={props.className || ""} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <circle cx="11" cy="11" r="8"></circle>
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
   </svg>
 );
 export const IconEdit = (props) => (
-  <svg width={props.width || "16"} height={props.height || "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "16"} height={props.height || "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M17 3l4 4-7 7H10v-4l7-7z"></path>
     <path d="M4 20h16"></path>
   </svg>
 );
 export const IconEye = (props) => (
-  <svg width={props.width || "14"} height={props.height || "14"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "14"} height={props.height || "14"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
     <circle cx="12" cy="12" r="3"></circle>
   </svg>
 );
 export const IconMapPin = (props) => (
-  <svg width={props.width || "12"} height={props.height || "12"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "12"} height={props.height || "12"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
     <circle cx="12" cy="10" r="3"></circle>
   </svg>
 );
 export const IconClock = (props) => (
-  <svg width={props.width || "14"} height={props.height || "14"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "14"} height={props.height || "14"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <circle cx="12" cy="12" r="10"></circle>
     <polyline points="12 6 12 12 16 14"></polyline>
   </svg>
 );
 export const IconBuilding = (props) => (
-  <svg width={props.width || "32"} height={props.height || "32"} style={props.style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "32"} height={props.height || "32"} style={props.style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
     <line x1="9" y1="6" x2="15" y2="6"></line>
     <line x1="9" y1="10" x2="15" y2="10"></line>
@@ -99,20 +99,20 @@ export const IconBuilding = (props) => (
   </svg>
 );
 export const IconUserCircle = (props) => (
-  <svg width={props.width || "32"} height={props.height || "32"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "32"} height={props.height || "32"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <circle cx="12" cy="8" r="4"></circle>
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
   </svg>
 );
 export const IconGlobe = (props) => (
-  <svg width={props.width || "28"} height={props.height || "28"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "28"} height={props.height || "28"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="2" y1="12" x2="22" y2="12"></line>
     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
   </svg>
 );
 export const IconHeartHandshake = (props) => (
-  <svg width={props.width || "28"} height={props.height || "28"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width={props.width || "28"} height={props.height || "28"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
     <path d="M12 2a10 10 0 0 1 10 10c0 3.5-2 6.5-5 8l-5 3-5-3c-3-1.5-5-4.5-5-8a10 10 0 0 1 10-10z"></path>
     <path d="M8 12h8"></path>
     <path d="M12 8v8"></path>
@@ -177,3 +177,54 @@ export const Badge = ({ status }) => {
     </span>
   );
 };
+
+export const IconArrowLeft = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+    <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+export const IconCheckSquare = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+    <polyline points="9 11 12 14 22 4" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+export const IconClipboard = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" strokeLinecap="round" strokeLinejoin="round"/>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+export const IconZap = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+export const IconMessageSquare = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+export const IconSave = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="17 21 17 13 7 13 7 21" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="7 3 7 8 15 8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+export const IconMessageCircle = (props) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-2.9-.4-4.1-1.1L3 20l1.2-5A8.5 8.5 0 1 1 21 11.5z"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    />
+  </svg>
+);

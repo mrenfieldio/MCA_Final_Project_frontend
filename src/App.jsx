@@ -9,6 +9,9 @@ import StudentDashboard from "./pages/StudentDashboard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ContactForm from "./pages/ContactForm";
+import InternshipJourney from "./components/Student/InternshipJourneyPage";
+import MessagingPage from "./components/Student/MessagingPage";
+import CompanyMessagingPage from "./components/Company/CompanyMessagingPage";
 
 function App() {
   return (
@@ -21,11 +24,16 @@ function App() {
         <Route path="/admin-dashboard" element={<ProtectedRoute adminOnly={true}> <AdminDashboard /></ProtectedRoute>}/>
         <Route path="/student-dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>}/>
         <Route path="/company-dashboard" element={<ProtectedRoute role="company"><CompanyDashboard /></ProtectedRoute> } />
+        <Route path="/student/internship/:id" element={<ProtectedRoute role="student"> <InternshipJourney /></ProtectedRoute>}/>
+        <Route path="/messages" element={<ProtectedRoute role="student"><MessagingPage /></ProtectedRoute>}/>
+        <Route path="/company/messages" element={<ProtectedRoute role="company"><CompanyMessagingPage /></ProtectedRoute>}/>
+      
 
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/contact" element={<ContactForm />} />
+        {/* <Route path="/internship-journey" element={<InternshipJourney />} /> */}
 
       </Routes>
     </Router>

@@ -35,7 +35,11 @@ export default function JobContent({ setShowPostModal }) {
       console.log("API response status:", response.status);
 
       if (!response.ok) {
-        console.error("API request failed:", response.status, response.statusText);
+        console.error(
+          "API request failed:",
+          response.status,
+          response.statusText,
+        );
         return;
       }
 
@@ -87,7 +91,7 @@ export default function JobContent({ setShowPostModal }) {
       const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
-        return date.toISOString().split('T')[0];
+        return date.toISOString().split("T")[0];
       };
 
       const formData = {
@@ -181,7 +185,7 @@ export default function JobContent({ setShowPostModal }) {
                   <td>{job.title}</td>
                   <td>{job.location}</td>
                   <td>{job.job_type}</td>
-                  <td>{job.salary}</td>
+                  <td>{job.stipend}</td>
                   <td>{job.deadline}</td>
 
                   <td>
@@ -211,157 +215,270 @@ export default function JobContent({ setShowPostModal }) {
 
       {editJob && (
         <div className="modal-overlay">
-          <div className="modal" key={editJob.id}>
+          <div className="modal modern-modal" key={editJob.id}>
+            {/* HEADER */}
             <div className="modal-header">
-              <h3>Edit Job</h3>
-              <button
-                className="modal-close"
-                onClick={() => setEditJob(null)}
-              >
+              <div>
+                <h3>Edit Opportunity</h3>
+                <p className="modal-subtitle">
+                  Update internship or freelance details
+                </p>
+              </div>
+
+              <button className="modal-close" onClick={() => setEditJob(null)}>
                 ×
               </button>
             </div>
 
+            {/* BODY */}
             <div className="modal-body">
+              {/* TITLE */}
               <div className="form-group">
-                <label>Job Title</label>
+                <label>Opportunity Title</label>
+
                 <input
                   type="text"
                   className="modal-input"
-                  placeholder="Job Title"
+                  placeholder="Frontend Developer Intern"
                   value={form.title || ""}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Job Description</label>
-                <textarea
-                  className="modal-textarea"
-                  placeholder="Job Description"
-                  rows="3"
-                  value={form.description || ""}
                   onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
+                    setForm({
+                      ...form,
+                      title: e.target.value,
+                    })
                   }
                 />
               </div>
 
+              {/* DESCRIPTION */}
+              <div className="form-group">
+                <label>Description</label>
+
+                <textarea
+                  className="modal-textarea"
+                  placeholder="Describe the opportunity..."
+                  rows="4"
+                  value={form.description || ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              {/* LOCATION + TYPE */}
               <div className="form-row">
                 <div className="form-group">
                   <label>Location</label>
+
                   <input
                     type="text"
                     className="modal-input"
-                    placeholder="Location"
+                    placeholder="Bengaluru"
                     value={form.location || ""}
-                    onChange={(e) => setForm({ ...form, location: e.target.value })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        location: e.target.value,
+                      })
+                    }
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Job Type</label>
+                  <label>Opportunity Type</label>
+
                   <select
                     className="modal-input"
                     value={form.job_type || ""}
-                    onChange={(e) => setForm({ ...form, job_type: e.target.value })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        job_type: e.target.value,
+                      })
+                    }
                   >
-                    <option value="">Select Job Type</option>
-                    <option value="full-time">Full-time</option>
-                    <option value="part-time">Part-time</option>
+                    <option value="">Select Type</option>
+
                     <option value="internship">Internship</option>
+
+                    <option value="freelance">Freelance</option>
+
+                    <option value="part-time">Part Time</option>
+
+                    <option value="full-time">Full Time</option>
                   </select>
                 </div>
               </div>
 
+              {/* WORK MODE + QUALIFICATION */}
               <div className="form-row">
                 <div className="form-group">
                   <label>Work Mode</label>
+
                   <select
                     className="modal-input"
                     value={form.work_mode || ""}
-                    onChange={(e) => setForm({ ...form, work_mode: e.target.value })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        work_mode: e.target.value,
+                      })
+                    }
                   >
                     <option value="">Select Work Mode</option>
+
                     <option value="onsite">Onsite</option>
+
                     <option value="remote">Remote</option>
+
                     <option value="hybrid">Hybrid</option>
                   </select>
                 </div>
 
                 <div className="form-group">
                   <label>Qualification</label>
+
                   <input
                     type="text"
                     className="modal-input"
-                    placeholder="Qualification"
+                    placeholder="B.Tech, MCA, MBA"
                     value={form.qualification || ""}
                     onChange={(e) =>
-                      setForm({ ...form, qualification: e.target.value })
+                      setForm({
+                        ...form,
+                        qualification: e.target.value,
+                      })
                     }
                   />
                 </div>
               </div>
 
+              {/* SKILLS */}
               <div className="form-group">
-                <label>Skills (comma separated)</label>
+                <label>Required Skills</label>
+
                 <input
                   type="text"
                   className="modal-input"
-                  placeholder="Skills (comma separated)"
+                  placeholder="Python, React, Django"
                   value={form.skills || ""}
-                  onChange={(e) => setForm({ ...form, skills: e.target.value })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      skills: e.target.value,
+                    })
+                  }
                 />
               </div>
 
+              {/* DURATION + PAYMENT */}
               <div className="form-row">
                 <div className="form-group">
-                  <label>Experience</label>
-                  <input
-                    type="text"
+                  <label>Duration</label>
+
+                  <select
                     className="modal-input"
-                    placeholder="Experience (e.g. 2 years)"
-                    value={form.experience || ""}
-                    onChange={(e) => setForm({ ...form, experience: e.target.value })}
-                  />
+                    value={form.duration || ""}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        duration: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">Select Duration</option>
+
+                    <option value="1">1 Month</option>
+
+                    <option value="2">2 Months</option>
+
+                    <option value="3">3 Months</option>
+
+                    <option value="6">6 Months</option>
+
+                    <option value="12">12 Months</option>
+                  </select>
                 </div>
 
                 <div className="form-group">
-                  <label>Salary</label>
-                  <input
-                    type="text"
+                  <label>Payment Type</label>
+
+                  <select
                     className="modal-input"
-                    placeholder="Salary"
-                    value={form.salary || ""}
-                    onChange={(e) => setForm({ ...form, salary: e.target.value })}
-                  />
+                    value={form.payment_type || ""}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        payment_type: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">Select Payment</option>
+
+                    <option value="paid">Paid</option>
+
+                    <option value="unpaid">Unpaid</option>
+
+                    <option value="performance_based">Performance Based</option>
+
+                    <option value="commission">Commission Based</option>
+                  </select>
                 </div>
               </div>
 
+              {/* STIPEND */}
+              {form.payment_type === "paid" && (
+                <div className="form-group">
+                  <label>Stipend Amount</label>
+
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="₹15000 / month"
+                    value={form.stipend || ""}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        stipend: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              )}
+
+              {/* DEADLINE */}
               <div className="form-group">
                 <label>Application Deadline</label>
+
                 <input
                   type="date"
                   className="modal-input"
                   value={form.deadline || ""}
-                  onChange={(e) => setForm({ ...form, deadline: e.target.value })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      deadline: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
 
+            {/* ACTIONS */}
             <div className="modal-actions">
-              <button
-                className="modal-cancel"
-                onClick={() => setEditJob(null)}
-              >
+              <button className="modal-cancel" onClick={() => setEditJob(null)}>
                 Cancel
               </button>
+
               <button
                 className="modal-submit"
                 onClick={handleUpdate}
                 disabled={loading}
               >
-                {loading ? "Updating..." : "Update Job"}
+                {loading ? "Updating..." : "Update Opportunity"}
               </button>
             </div>
           </div>

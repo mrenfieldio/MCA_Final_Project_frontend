@@ -4,6 +4,8 @@ import Navbar from "../components/Student/Student_Navbar";
 import DashboardContent from "../components/Student/DashboardContent";
 import AppliedJobsContent from "../components/Student/AppliedJobs";
 import ProfileContent from "../components/Student/ProfileContent";
+import InternshipJourneyPage from "../components/Student/InternshipJourneyPage";
+import MessagingPage from "../components/Student/MessagingPage";
 import "../styles/student.css";
 
 export default function StudentDashboard() {
@@ -12,7 +14,7 @@ export default function StudentDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const tab = searchParams.get('tab');
-    const validTabs = ["dashboard", "applied", "profile"];
+    const validTabs = ["dashboard", "applied", "profile", "internship", "messages"];
     return validTabs.includes(tab) ? tab : 'dashboard';
   });
   const [searchQuery, setSearchQuery] = useState("");
@@ -368,6 +370,12 @@ export default function StudentDashboard() {
             token={localStorage.getItem("token")}
             refreshProfile={fetchStudentProfile}
           />
+        )}
+        {activeTab === "internship" && (
+          <InternshipJourneyPage />
+        )}
+        {activeTab === "messages" && (
+          <MessagingPage />
         )}
       </main>
 

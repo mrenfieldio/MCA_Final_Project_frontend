@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, navigate } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Briefcase,
@@ -8,6 +8,7 @@ import {
   X,
   User,
   CheckCircle,
+  MessageCircle,
 } from "lucide-react";
 
 export default function Navbar({
@@ -23,12 +24,42 @@ export default function Navbar({
   handleLogout,
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/student/unread-messages/",
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      setUnreadCount(data.unread_count);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchNotifications = async () => {
     const token = localStorage.getItem("token");
@@ -89,11 +120,37 @@ export default function Navbar({
               My Jobs
             </button>
           </li>
+          <li>
+            <button
+              className={`nav-link ${activeTab === "internship" ? "active" : ""}`}
+              onClick={() => setActiveTab("internship")}
+            >
+              Internship Journey
+            </button>
+          </li>
         </ul>
 
         {/* Actions */}
         <div className="nav-actions">
           {/* Notifications */}
+          {/* MESSAGE */}
+          <button
+            className="icon-btn message-icon-btn"
+            onClick={() => {
+              setActiveTab("messages");
+
+              navigate("/student-dashboard?tab=messages");
+            }}
+          >
+            <MessageCircle size={20} />
+
+            {/* UNREAD BADGE */}
+            {unreadCount > 0 && (
+              <span className="message-count-badge">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </button>
           <div className="notification-wrapper">
             <button
               className="icon-btn"
@@ -203,6 +260,15 @@ export default function Navbar({
             }}
           >
             Profile Management
+          </button>
+          <button
+            className="mobile-nav-link"
+            onClick={() => {
+              setActiveTab("internship");
+              setMobileMenuOpen(false);
+            }}
+          >
+            Internship Journey
           </button>
           <button
             className="mobile-nav-link logout-mobile"

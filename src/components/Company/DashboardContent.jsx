@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PaymentButton from "../../components/PaymentButton";
 import {
   IconClock,
@@ -11,6 +12,7 @@ import {
   IconMapPin,
   IconEye,
   IconEdit,
+  IconMessageCircle,
   StatCard,
   Badge,
   companyName,
@@ -28,6 +30,7 @@ export default function DashboardContent({
   const [jobs, setJobs] = useState([]);
   const [recentCandidates, setRecentCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboard();
@@ -69,22 +72,17 @@ export default function DashboardContent({
             })}
           </p> */}
         </div>
-        <div className="company-badge">
-          <div className="company-avatar">
-            {company?.company_name
-              ? company.company_name
-                  .split(" ")
-                  .map((word) => word[0])
-                  .join("")
-                  .slice(0, 2)
-                  .toUpperCase()
-              : "?"}
-          </div>
-          <div className="company-info">
-            <p>{company?.company_name || "Loading..."}</p>
-            <p>Premium Plan</p>
-          </div>
-        </div>
+        {/* <div className="dashboard-actions">
+          
+          <button
+            className="message-dashboard-btn"
+            onClick={() => navigate("/company/messages")}
+          >
+            <IconMessageCircle width={20} height={20} />
+
+            <span>Messages</span>
+          </button>
+        </div> */}
       </div>
 
       <div className="stats-grid">
@@ -140,21 +138,19 @@ export default function DashboardContent({
                 <tr key={job.id}>
                   <td style={{ fontWeight: 500 }}>{job.title}</td>
                   {/* <td>{job.dept}</td> */}
-                    <td>
-                      {job.location}
-                    </td>
-                    <td>{job.applicants}</td>
-                    <td>
-                      <Badge status={job.status} />
-                    </td>
-                    <td style={{ color: "#94a3b8" }}>{job.posted}</td>
-                    <td>
-                      {/* <button className="action-btn">
+                  <td>{job.location}</td>
+                  <td>{job.applicants}</td>
+                  <td>
+                    <Badge status={job.status} />
+                  </td>
+                  <td style={{ color: "#94a3b8" }}>{job.posted}</td>
+                  <td>
+                    {/* <button className="action-btn">
                         <IconEye width={14} height={14} /> View
                       </button> */}
-                    </td>
-                  </tr>
-                ))}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

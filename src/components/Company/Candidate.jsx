@@ -8,7 +8,6 @@ import {
   Badge,
 } from "./CompanyShared";
 
-// ─── Modal ────────────────────────────────────────────────────────────────────
 function Modal({ title, onClose, children }) {
   return (
     <div style={{
